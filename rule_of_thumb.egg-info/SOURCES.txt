@@ -2,6 +2,7 @@ setup.py
 rule_of_thumb/__init__.py
 rule_of_thumb/beam_design.py
 rule_of_thumb/bulk_density.py
+rule_of_thumb/dsg_bm_aci.py
 rule_of_thumb/self_weight.py
 rule_of_thumb/slab_thickness.py
 rule_of_thumb/soil_loads.py

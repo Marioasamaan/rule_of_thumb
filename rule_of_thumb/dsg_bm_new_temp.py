@@ -1,4 +1,124 @@
 #We twill build the analysis function firs 
+class textFormat:
+    # Text colors
+    GREEN = '\033[92m'
+    OKGREEN = '\033[102m'  # Bright green background
+    WARNING = '\033[93m'
+    RED = '\033[91m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    MAGENTA = '\033[95m'
+    YELLOW = '\033[33m'
+    WHITE = '\033[97m'
+    BLACK = '\033[30m'
+
+    # Background colors
+    BG_RED = '\033[41m'
+    BG_GREEN = '\033[42m'
+    BG_YELLOW = '\033[43m'
+    BG_BLUE = '\033[44m'
+    BG_MAGENTA = '\033[45m'
+    BG_CYAN = '\033[46m'
+    BG_WHITE = '\033[47m'
+    BG_BLACK = '\033[40m'
+
+    # Text styles
+    BOLD = '\033[1m'
+    DIM = '\033[2m'
+    ITALIC = '\033[3m'
+    UNDERLINE = '\033[4m'
+    BLINK = '\033[5m'
+    REVERSE = '\033[7m'  # Swap foreground and background colors
+    HIDDEN = '\033[8m'  # Invisible text
+    STRIKETHROUGH = '\033[9m'
+
+    # Reset/End
+    END = '\033[0m'
+
+    # Combine styles
+    BOLD_ITALIC = '\033[1m\033[3m'
+    BOLD_UNDERLINE = '\033[1m\033[4m'
+    ITALIC_UNDERLINE = '\033[3m\033[4m'
+    BOLD_ITALIC_UNDERLINE = '\033[1m\033[3m\033[4m'
+
+
+    @staticmethod
+    def rectangle(text, border_char='*', color=None):
+        # Ensure 'text' is a string and border_char is also a string
+        if not isinstance(text, str):
+            raise TypeError("text must be a string")
+        
+        if not isinstance(border_char, str):
+            raise TypeError("border_char must be a string")
+        
+        # Optional color handling
+        color_code = color if color else textFormat.END
+        border = border_char * (len(text) + 4)
+        return f"{color_code}{border}\n{border_char} {text} {border_char}\n{border}{textFormat.END}"
+#---------------------------------------------------------------------------------#
+import math
+def solve_quadratic(a, b, c):
+    # Ensure c is negative
+    c = -abs(c)  # Convert c to a negative value
+    # Calculate the discriminant
+    discriminant = b**2 - 4*a*c
+    
+    # Check for real roots
+    if discriminant < 0:
+        return "No real roots"
+    
+    # Calculate the two roots
+    root1 = (-b + math.sqrt(discriminant)) / (2*a)
+    root2 = (-b - math.sqrt(discriminant)) / (2*a)
+    
+    # Return the positive root only
+    positive_roots = [r for r in (root1, root2) if r > 0]
+    if positive_roots:
+        return min(positive_roots)  # Return the smallest positive root
+    else:
+        return "No positive root"
+
+def calculate_beta(fck):
+    """Calculate β₁ based on fc' (in ksi)."""
+    if fck <= 4:
+        return 0.85
+    elif fck <= 5:
+        return 0.80
+    elif fck <= 6:
+        return 0.75
+    elif fck <= 7:
+        return 0.70
+    else:  # fc_prime >= 8000
+        return 0.65
+
+Es = 29000  # ksi
+cover = 1.5  # inches
+#---------------------------------------------------------------------------------#
+def calculate_phi(e_t , e_ty):
+    """
+    Calculate the strength reduction factor (phi) based on the ACI chart.
+    e_t: Tensile strain
+    e_ty: Yield strain (f_y / E_s)
+    """
+    if e_t < e_ty:
+        print('Compression-controlled region , phi =0.65 ')
+        return 0.65             #Compression-controlled region
+    elif e_ty <= e_t <= e_ty + 0.003:
+        print(' Transition region , phi =calculated ')
+        return 0.65 + 0.25 * (e_t - e_ty) / 0.003  # Transition region
+    elif e_t > e_ty + 0.003:
+        print('Tension-controlled region,, phi =0.9')
+        return 0.9  # Tension-controlled region
+#---------------------------------------------------------------------------------#
+def calculate_As_min(b=None,d=None,fyk=None,fck=None):
+    # Calculate the maximum value between (fc^1/3) and 200 psi
+    max_value = max(3 * math.sqrt(fck), 200) #psi
+    As_min = (b * d /fyk) * max_value
+    print(f"Minimum steel area (As_min): {As_min:.2f} square inches")
+
+    return As_min
+#---------------------------------------------------------------------------------#
+
 def analyze_section(b=None, h=None, d=None, As=None, fck=None, fyk=None, 
                     bw=None, hf=None, l=None, s=None, As_prime=0, d_prime=0):
     """
@@ -160,3 +280,11 @@ def analyze_section(b=None, h=None, d=None, As=None, fck=None, fyk=None,
     }
     return results
 #the final oourput for this function should be phiMn and design efficiency 
+result = analyze_section(
+    b=12, h=24, d=20, As=4, fck=4000, fyk=50000,
+    bw=10, hf=6, l=15, s=6, As_prime=2, d_prime=2
+)
+print(result)
+
+def sec_analysis_ec2(fck=None,fyk=None,Es=None,Ec=None, b=None,d=None,As=None)
+    

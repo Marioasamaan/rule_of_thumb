@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="rule_of_thumb",
-    version="0.1",
+    version="0.1.4.1",  # Correct version format without leading zeros
     packages=find_packages(),
     install_requires=[],  # Add dependencies if needed
     author="Mario Samaan",
